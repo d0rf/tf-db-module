@@ -1,8 +1,3 @@
-provider "google" {
-  project = var.gcp_project
-  region  = var.region
-}
-
 resource "random_password" "password" {
   // Create a new password with special chars and 16 characters
   length  = 16
@@ -11,10 +6,10 @@ resource "random_password" "password" {
 
 resource "google_sql_database_instance" "master" {
   // Create a new sql database with variables.tf content
-  # project             = var.gcp_project
-  name             = var.instance_name
-  database_version = var.database_version
-  # region              = var.region
+  project             = var.gcp_project
+  name                = var.instance_name
+  database_version    = var.database_version
+  region              = var.region
   deletion_protection = "false"
   // We allow internet access only for lab purpose
   settings {
@@ -31,7 +26,7 @@ resource "google_sql_database_instance" "master" {
 
 resource "google_sql_user" "users" {
   // Create the database user
-  # project  = var.gcp_project
+  project  = var.gcp_project
   name     = var.username
   instance = google_sql_database_instance.master.name
   password = random_password.password.result
